@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import image1 from "../picture/chef1.705417f3cf231c71d1bd.png"
 import { getToken } from "../pages/Functions"
 import Example from "./Example"
+import Input from "../pages/Input"
 function Nav(props){
   const token = getToken()
     return(
@@ -41,6 +42,10 @@ function Nav(props){
       
        
       </ul>
+      <div className="d-flex mx-5 my-2 " role="search">
+       <Input/>
+     
+       </div>
       <div className="d-flex mx-5 my-2 " role="search">
        
       {

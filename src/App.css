@@ -378,7 +378,7 @@ main .application-form{
 	margin: 0 auto;
 }
 /* Content main === Checkout Page === Checkout Items */
-main .application-form .application-form-detail{
+/* main .application-form .application-form-detail{
 	width: 100%;
 }
 main .application-form .application-form-detail h4{
@@ -440,7 +440,7 @@ form button{
 }
 form button:hover{
 	color: var(--white);
-}
+} */
 .buttonsmenu{
   margin-top: 100px;
 }
@@ -450,5 +450,346 @@ form button:hover{
 
 
 
+/* Add the following styles to your CSS file */
+.button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 120px;
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.button:hover {
+  background-color: #f2f2f2;
+}
+
+.button.active {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #eee;
+  margin-bottom: 10px;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.icon-container.active {
+  background-color: #fff;
+  border: 2px solid #dc3545;
+}
+
+.icon-container.active .icon {
+  filter: invert(48%) sepia(65%) saturate(3446%) hue-rotate(346deg) brightness(97%) contrast(101%);
+}
+
+.icon {
+  margin: 10px;
+  transition: all 0.3s ease;
+}
 
 
+.menubutton {
+  width: 80px;
+  height: 70px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  border: none;
+}
+
+.icon-container{
+  background-color: #808080;
+  border-radius: 50%;
+  height: 40px;
+  width: 40px;
+  margin: auto;
+}
+
+.lineunder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #333;
+  position: relative;
+  margin-bottom: 10px;
+}
+
+.lineunder hr {
+  position: absolute;
+  bottom: -14px;
+  width: 140px;
+  height: 4px;
+  background-color: #ff8c00;
+  border: none;
+  border-radius: 2px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  opacity: 0.8;
+}
+
+/* Optional: add more space between the buttons and the line */
+.buttonsmenu {
+  margin-bottom: 20px;
+}
+.menu-card {
+  height: 100%;
+}
+
+.img-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.img-container:hover img {
+  transform: scale(1.1);
+}
+
+.cart-img {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.card-price {
+  color: #ff8c00;
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.btn-rounded {
+  border-radius: 25px;
+  padding: 10px 20px;
+  margin-top: 1rem;
+}
+
+/* Bootstrap Grid Layout */
+.row-cols-1 > * {
+  flex: 0 0 100%;
+  max-width: 100%;
+}
+
+.row-cols-sm-2 > * {
+  flex: 0 0 50%;
+  max-width: 50%;
+}
+
+.row-cols-md-3 > * {
+  flex: 0 0 33.33%;
+  max-width: 33.33%;
+}
+
+.g-4 {
+  gap: 1rem;
+}
+
+@media screen and (max-width: 767px) {
+  .row-cols-md-3 > * {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+
+
+
+
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+  margin: 0px;
+  padding: 0px;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+
+.container1{
+  max-width: 1100px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+.container1 .box{
+  width: calc(33% - 10px);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 30px;
+  border-radius: 5px;
+}
+.box .quote i{
+margin-top: 10px;
+font-size: 45px;
+color: #17c0eb
+}
+.container1 .box .image{
+  margin: 10px 0;
+  height: 150px;
+  width: 150px;
+  background: #8e44ad;
+  padding: 3px;
+  border-radius: 50%;
+}
+.box .image img{
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #fff;
+}
+.box p{
+  text-align: justify;
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 400;
+}
+.box .name_job{
+  margin: 10px 0 3px 0;
+  color: #8e44ad;
+  font-size: 18px;
+  font-weight: 600;
+}
+.rating i{
+  font-size: 18px;
+  color: #8e44ad;
+  margin-bottom: 5px;
+}
+.btns{
+  margin-top: 20px;
+  margin-bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.btns button{
+  background: #8e44ad;
+  width: 100%;
+  padding: 9px 0px;
+  outline: none;
+  border: 2px solid #8e44ad;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 400;
+  color: #8e44ad;
+  transition: all 0.3s linear;
+}
+.btns button:first-child{
+  background: none;
+  margin-right: 5px;
+}
+.btns button:last-child{
+  color: #fff;
+  margin-left: 5px;
+}
+.btns button:first-child:hover{
+  background: #8e44ad;
+  color: #fff;
+}
+.btns button:hover{
+  color: #fff;
+}
+@media (max-width:1045px){
+  .container .box{
+    width: calc(50% - 10px);
+    margin-bottom: 20px;
+  }
+}
+@media (max-width:710px){
+  .container .box{
+    width: 100%;
+  }
+}
+.menucards{
+ 
+   margin-left: 40px;
+   margin-right: 40px;
+   width: auto;
+ 
+ 
+}
+.search-results-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px;
+}
+
+.product-card {
+  flex: 0 0 auto;
+  width: 300px;
+  margin-right: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.product-card img {
+  display: block;
+  margin: 0 auto;
+}
+
+.product-details {
+  text-align: center;
+}
+
+.buttons {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}

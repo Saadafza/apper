@@ -13,43 +13,45 @@ import {
 } from 'mdb-react-ui-kit';
 import { useState } from 'react';
 import axios from 'axios';
-import { Navigate,Link, useNavigate } from "react-router-dom"
+import { Navigate, Link, useNavigate } from "react-router-dom";
+
 function Signup() {
-const[email ,setEmail]= useState("")
-const[password ,setPassword]= useState("")
-const[image ,setImage]= useState("")
-const[name ,setName]= useState("")
-const [isLoading, setIsLoading] = useState(false);
-const navigate = useNavigate();
-const handlesubmit=()=>{
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [image, setImage] = useState("");
+  const [name, setName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleSubmit = () => {
     setIsLoading(true);
-    axios.post('http://localhost:3003/registration/', {
-        name: name,
-        email: email,
-        password: password,
-        image: image
-      }, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      }
-      ).then( (res) => {
-        if(res.data.status == true) {
-          navigate("/")
-          console.log("all is okay here")
+
+    // Create a FormData object to send the image as multipart/form-data
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+    formData.append("image", image);
+
+    axios.post('http://localhost:3003/registration/', formData)
+      .then((res) => {
+        if (res.data.status === true) {
+          // Registration successful, navigate to the login page
+          navigate("/login");
+          console.log("Registration successful");
         } else {
           console.log(res.data.errors);
-          if(res.data.status == false) {
-           console.log("erroe here")
+          if (res.data.status === false) {
+            console.log("Error during registration");
           }
-
         }
         setIsLoading(false);
       })
-    
-}
-
-
+      .catch((error) => {
+        console.error('Error while submitting the form:', error);
+        setIsLoading(false);
+      });
+  }
 
   return (
     <MDBContainer fluid>
@@ -61,17 +63,17 @@ const handlesubmit=()=>{
 
               <div className="d-flex flex-row align-items-center mb-4">
                 <MDBIcon fas icon="user me-3" size='lg' />
-                <MDBInput label='Your Name' id='form1' onChange={(e)=>{setName(e.target.value)}} type='text' className='w-100' />
+                <MDBInput label='Your Name' id='form1' onChange={(e) => { setName(e.target.value) }} type='text' className='w-100' />
               </div>
 
               <div className="d-flex flex-row align-items-center mb-4">
                 <MDBIcon fas icon="envelope me-3" size='lg' />
-                <MDBInput label='Your Email' onChange={(e)=>{setEmail(e.target.value)}} id='form2' type='email' />
+                <MDBInput label='Your Email' onChange={(e) => { setEmail(e.target.value) }} id='form2' type='email' />
               </div>
 
               <div className="d-flex flex-row align-items-center mb-4">
                 <MDBIcon fas icon="lock me-3" size='lg' />
-                <MDBInput label='Password' onChange={(e)=>{setPassword(e.target.value)}} id='form3' type='password' />
+                <MDBInput label='Password' onChange={(e) => { setPassword(e.target.value) }} id='form3' type='password' />
               </div>
 
               <div className="d-flex flex-row align-items-center mb-4">
@@ -83,7 +85,9 @@ const handlesubmit=()=>{
                 <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Subscribe to our newsletter' />
               </div>
 
-              <MDBBtn className='mb-4' size='lg' onClick={handlesubmit} disabled={isLoading}> {isLoading ? 'Loading...' : 'Register'}</MDBBtn>
+              <MDBBtn className='mb-4' size='lg' onClick={handleSubmit} disabled={isLoading}>
+                {isLoading ? 'Loading...' : 'Register'}
+              </MDBBtn>
             </MDBCol>
 
             <MDBCol md='10' lg='6' className='order-1 order-lg-2 d-flex align-items-center'>

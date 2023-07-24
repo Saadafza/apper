@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Container, Grid, Card, CardContent, Typography, TextField, Button,CardMedia } from "@mui/material";
+import { Container, Grid, Card, CardContent, Typography, TextField, Button, Avatar } from "@mui/material";
 import { useParams } from "react-router-dom";
 import jwt_decode from "jwt-decode";
 
@@ -67,62 +67,63 @@ const DetailPage = () => {
     setCommentInput(event.target.value);
   };
 
+  console.log("product:", product);
+  console.log("price:", product.price);
+
   return (
     <Container maxWidth="md">
-    <Grid container spacing={2} justifyContent="center" alignItems="center">
-      <Grid item xs={12}>
-        <Card>
-        <CardMedia
-    component="img"
-    height="100"
- 
-    image={product.image} 
-    alt="Product Image"
-  />
-          <CardContent>
-            <Typography variant="h4">{product.title}</Typography>
-            <Typography variant="body1">{product.description}</Typography>
-            <Typography variant="body2">Price: ${product.price}</Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent>
-            <Typography variant="h5">Add a Comment</Typography>
-            <form onSubmit={handleSubmit}>
-              <TextField
-                label="Your Comment"
-                variant="outlined"
-                value={commentInput}
-                onChange={handleCommentChange}
-                fullWidth
-              />
-              <Button variant="contained" color="primary" type="submit" fullWidth>
-                Submit
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </Grid>
-        <Grid item xs={12}>
-  {comments.map((comment) => (
-    <Card key={comment._id} variant="outlined">
-      <CardContent>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item>
-            <img src={"http://localhost:3003/" +comment.user[0].image} alt="User" width="50" height="50" />
-          </Grid>
-          <Grid item>
-            <Typography variant="h6">{comment.user[0].name}</Typography>
-            <Typography variant="body1">{comment.comment}</Typography>
-          </Grid>
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Card>
+            <img src={product.image} alt="Product Image" style={{ width: "100%" }} />
+          </Card>
         </Grid>
-      </CardContent>
-    </Card>
-  ))}
-</Grid>
-
+        <Grid item xs={12} md={6}>
+          <Card>
+            <CardContent>
+              <Typography variant="h4">{product.title}</Typography>
+              <Typography variant="body1">{product.description}</Typography>
+              <Typography variant="body2">Price: {product.price ? `$${product.price.toFixed(2)}` : ""}</Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Typography variant="h5">Add a Comment</Typography>
+              <form onSubmit={handleSubmit}>
+                <TextField
+                  label="Your Comment"
+                  variant="outlined"
+                  value={commentInput}
+                  onChange={handleCommentChange}
+                  fullWidth
+                  required
+                />
+                <Button variant="contained" color="primary" type="submit">
+                  Submit
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          {comments.map((comment) => (
+            <Card key={comment._id} variant="outlined">
+              <CardContent>
+                <Grid container spacing={2} alignItems="center">
+                  <Grid item>
+                    <Avatar src={"http://localhost:3003/" +comment.user[0].image} alt="User" />
+                 </Grid>
+                  <Grid item>
+                    <Typography variant="h6">{comment.user[0].name}</Typography>
+                    <Typography variant="body1">{comment.comment}</Typography>
+                  </Grid>
+                </Grid>
+              </CardContent>
+            </Card>
+          ))}
+        </Grid>
       </Grid>
     </Container>
   );

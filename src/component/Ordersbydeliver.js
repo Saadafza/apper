@@ -42,8 +42,8 @@ const [deliver,setDeliver]=useState("")
       .get('http://localhost:3003/claimedorder')
       .then((res) => {
         console.log(res.data);
-        setClaimedOrders(res.data.claim.map((item) => item.orders));
-        setUserclaimed(res.data.claim)
+        setClaimedOrders(res.data.claim.map((item) => item.orders._id));
+        setUserclaimed(res.data.claim.map((item) => item.orders))
       })
       .catch((error) => {
         console.error('Error fetching claimed orders:', error);
@@ -172,9 +172,9 @@ console.log(userclaimed)
       render: (_, item) => (
         <Space>
           <Button
-            type="primary"
+            type="danger"
 
-          
+          style={{backgroundColor:"red",color:"white"}}
           >
            Delete
           </Button>

@@ -14,19 +14,27 @@ const AdminPanel = () => {
   const [totalPriceEarned, setTotalPriceEarned] = useState('');
   const [profit, setProfit] = useState('');
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        await Promise.all([fetchItems(), fetchUsersCount(), fetchDeliveryBoysRequests(), fetchOrders()]);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
+
   useEffect(() => {
     if (!loading) {
       calculateTotalPriceEarned();
       calculateProfit();
     }
   }, [loading, orders, expenditure]);
-  
-  useEffect(() => {
-    fetchItems();
-    fetchUsersCount();
-    fetchDeliveryBoysRequests();
-    fetchOrders();
-  }, []);
 
   const fetchItems = async () => {
     try {
@@ -55,6 +63,17 @@ const AdminPanel = () => {
       console.error('Error fetching delivery boys requests:', error);
     }
   };
+console.log(requests)
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get('http://localhost:3003/orders');
+      setOrders(response.data.orders);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+      setLoading(false);
+    }
+  };
 
   const deleteItem = async (itemId) => {
     try {
@@ -75,22 +94,20 @@ const AdminPanel = () => {
       // Handle the error or show an appropriate message to the user.
     }
   }
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        await Promise.all([fetchItems(), fetchUsersCount(), fetchDeliveryBoysRequests(), fetchOrders()]);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
-  const approve = (requestId) => {
+  const approve = (userId) => {
+    console.log('userId:', userId);
+  
+   console.log(role)
+    if (!role) {
+      notification.error({
+        message: 'Error',
+        description: 'Please select a role before approving the request.',
+      });
+      return;
+    }
+  
     axios
-      .put(`http://localhost:3003/users/${requestId}/role`, {
+      .put(`http://localhost:3003/users/${userId}/role`, {
         role: role,
       })
       .then((res) => {
@@ -117,15 +134,33 @@ const AdminPanel = () => {
       });
   };
 
-  const fetchOrders = async () => {
-    try {
-      const response = await axios.get('http://localhost:3003/orders');
-      setOrders(response.data.orders);
-      setLoading(false);
-    } catch (error) {
-      console.error('Error fetching orders:', error);
-      setLoading(false);
-    }
+  const calculateTotalQuantitySold = () => {
+    const totalSoldMap = new Map();
+    orders.forEach((order) => {
+      const itemId = order.deals?._id; // Use optional chaining to access `_id`
+      const quantity = Number(order.quantity);
+      if (totalSoldMap.has(itemId)) {
+        totalSoldMap.set(itemId, totalSoldMap.get(itemId) + quantity);
+      } else {
+        totalSoldMap.set(itemId, quantity);
+      }
+    });
+    return Array.from(totalSoldMap, ([itemId, totalQuantitySold]) => ({
+      key: itemId,
+      totalQuantitySold: totalQuantitySold,
+    }));
+  };
+
+  const calculateTotalPriceEarned = () => {
+    const total = orders.reduce((acc, order) => acc + parseFloat(order.price), 0);
+    setTotalPriceEarned(total.toFixed(2));
+  };
+
+  const calculateProfit = () => {
+    const totalEarned = parseFloat(totalPriceEarned);
+    const totalExpenditure = parseFloat(expenditure);
+    const profitValue = (totalEarned - totalExpenditure).toFixed(2);
+    setProfit(profitValue);
   };
 
   const itemColumns = [
@@ -198,7 +233,6 @@ const AdminPanel = () => {
       key: 'role',
     },
   ];
-
   const requestColumns = [
     {
       title: 'ID',
@@ -212,9 +246,15 @@ const AdminPanel = () => {
     },
     {
       title: 'Image',
-      dataIndex: 'image',
+      dataIndex: 'users',
       key: 'image',
-      render: (image) => <img src={image} alt="User" style={{ width: 50, height: 50 }} />,
+      render: (user) => <img src={user.image} alt="User" style={{ width: 50, height: 50 }} />,
+    },
+    {
+      title: 'User ID',
+      dataIndex: 'users',
+      key: 'userId',
+      render: (user) => user._id,
     },
     {
       title: 'Actions',
@@ -225,14 +265,13 @@ const AdminPanel = () => {
             <Option value="user">User</Option>
             <Option value="delivery">Delivery</Option>
           </Select>
-          <Button type="primary" onClick={() => approve(item._id)}>
-            Approve
-          </Button>
+          <Button type="primary" onClick={() => approve(item.users._id)}>
+  Approve
+</Button>
         </Space>
       ),
     },
   ];
-
   const orderColumns = [
     {
       title: 'ID',
@@ -284,65 +323,29 @@ const AdminPanel = () => {
     },
   ];
 
-  const calculateTotalQuantitySold = () => {
-    const totalSoldMap = new Map();
-    orders.forEach((order) => {
-      const itemId = order.deals?._id; // Use optional chaining to access `_id`
-      const quantity = Number(order.quantity);
-      if (totalSoldMap.has(itemId)) {
-        totalSoldMap.set(itemId, totalSoldMap.get(itemId) + quantity);
-      } else {
-        totalSoldMap.set(itemId, quantity);
-      }
-    });
-    return Array.from(totalSoldMap, ([itemId, totalQuantitySold]) => ({
-      key: itemId,
-      totalQuantitySold: totalQuantitySold,
-    }));
-  };
-
-  useEffect(() => {
-    calculateTotalPriceEarned();
-    calculateProfit();
-  }, [orders, expenditure]);
-
-  const calculateTotalPriceEarned = () => {
-    const total = orders.reduce((acc, order) => acc + parseFloat(order.price), 0);
-    setTotalPriceEarned(total.toFixed(2));
-  };
-
-  const calculateProfit = () => {
-    const totalEarned = parseFloat(totalPriceEarned);
-    const totalExpenditure = parseFloat(expenditure);
-    const profitValue = (totalEarned - totalExpenditure).toFixed(2);
-    setProfit(profitValue);
-  };
-
-  
   return (
     <div style={{ padding: '20px' }}>
       <h2 style={{ marginBottom: '20px' }}>Admin Panel</h2>
       <Card style={{ marginBottom: '20px' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
-  <div style={{ textAlign: 'center' }}>
-    <div style={{ fontSize: '24px', color: '#000' }}>Total Price Earned</div>
-    <div style={{ fontSize: '36px', color: '#000', fontWeight: 'bold' }}>{totalPriceEarned} USD</div>
-  </div>
-  <div style={{ textAlign: 'center' }}>
-    <div style={{ fontSize: '24px', color: '#000' }}>Expenditure</div>
-    <Input
-      style={{ fontSize: '18px', fontWeight: 'bold' }}
-      value={expenditure}
-      onChange={(e) => setExpenditure(e.target.value)}
-      placeholder="Enter Expenditure"
-    />
-  </div>
-  <div style={{ textAlign: 'center' }}>
-    <div style={{ fontSize: '24px', color: '#000' }}>Profit</div>
-    <div style={{ fontSize: '36px', color: '#000', fontWeight: 'bold' }}>{profit} USD</div>
-  </div>
-</div>
-
+        <div style={{ display: 'flex', justifyContent: 'space-around', marginBottom: '20px' }}>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '24px', color: '#000' }}>Total Price Earned</div>
+            <div style={{ fontSize: '36px', color: '#000', fontWeight: 'bold' }}>{totalPriceEarned} USD</div>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '24px', color: '#000' }}>Expenditure</div>
+            <Input
+              style={{ fontSize: '18px', fontWeight: 'bold' }}
+              value={expenditure}
+              onChange={(e) => setExpenditure(e.target.value)}
+              placeholder="Enter Expenditure"
+            />
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <div style={{ fontSize: '24px', color: '#000' }}>Profit</div>
+            <div style={{ fontSize: '36px', color: '#000', fontWeight: 'bold' }}>{profit} USD</div>
+          </div>
+        </div>
       </Card>
 
       <Card title="Items" style={{ marginBottom: '20px' }}>

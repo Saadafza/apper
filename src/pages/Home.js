@@ -3,7 +3,8 @@ import image2  from "../picture/delivery.bf9130a0962fbe091abc.png"
 import { useEffect,useState } from 'react';
 import axios from 'axios';
 import ButtonFunctionPage from "./ButtonFunctionsPage"
-function Home() {
+import New from "./New"
+function Home(props) {
     const [foods, setFoods] = useState([]);
 
     useEffect( () => {
@@ -78,7 +79,8 @@ function Home() {
                 }
                </div>
             </div>
-    <ButtonFunctionPage/>
+            <New/>
+    <ButtonFunctionPage addtocart={props.addtocart}/>
         <div class="image-container">
         <img src={image1} alt="cont" class="shaking-image"/>
       </div>

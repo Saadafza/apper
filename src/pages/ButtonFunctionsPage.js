@@ -1,12 +1,12 @@
-import image1 from "../picture/icons8-chicken-64.png"
-import image2 from "../picture/icons8-drink-30.png"
-import image3 from "../picture/icons8-icecream-30.png"
-import image4 from "../picture/icons8-rice-30.png"
-import image5 from "../picture/icons8-fish-30.png"
-import image6 from "../picture/icons8-rice-30.png"
-import image7 from "../picture/icons8-fruits-30.png"
-import image8 from "../picture/icons8-curry-48.png"
-import image9 from "../picture/icons8-food-menu-40.png"
+import image1 from "../picture/turkey.png"
+import image2 from "../picture/soft-drink.png"
+import image3 from "../picture/ice-cream.png"
+import image4 from "../picture/cake.png"
+import image5 from "../picture/fish.png"
+import image6 from "../picture/wheat.png"
+import image7 from "../picture/harvest.png"
+import image8 from "../picture/curry.png"
+import image9 from "../picture/cutlery.png"
 import image10 from "../picture/not fond.png"
 import image11 from "../picture/add-to-cart.png"
 import React, { useState } from 'react';
@@ -122,29 +122,30 @@ const ButtonFunctionsPage = (props) => {
   } else {
     card = (
 
-      <div className="container ">
-        <div className="row">
-          
-          {foods.map((food) => (
-            <div className="col-md-3" key={food.id}>
-              <div class="menucard">
-                <div className="img-con">
-                  <img className="menucard-img" src={food.image} alt="card" />
-                  <div className="cart-img" onClick={ () => { props.addtocart(food) } }  ><img src={image11} alt="cart" /></div>
-
-                </div>
-                <div className="text">
-                <p className="text-end">{food.title}</p>
-                <p className="text-end des" >{food.description}</p>
-                <p className="text-end">{food.price}</p>
-              </div>
-              <Link type="button" to={"/detailpage/"+food._id} class="btn btn-dark btn-rounded">detail</Link>
+<div className="row my-5" style={{ backgroundColor: "#D3CFD5" ,marginLeft:"40px",marginRight:"40px" ,borderRadius:"10px" }}>
+    {foods.map((food) => (
+      <div className="col-md-3 my-4" key={food.id}>
+        <div className="card h-100 shadow-sm" style={{borderRadius:"10px"}}>
+          <div className="img-container position-relative">
+            <img src={food.image} className="card-img-top img-fluid" alt="food" />
+            <div className="btn-add-to-cart position-absolute top-0 end-0">
+              <img src={image11} alt="cart" className="img-fluid" onClick={() => props.addtocart(food)} />
             </div>
-            </div>
-          ))}
-          <div className="col-md-1"></div>
-        </div></div>
-
+          </div>
+          <div className="card-body">
+            <h5 className="card-title">{food.title}</h5>
+            <p className="card-subtitle mb-2">{food.description}</p>
+            <p className="card-price mb-0">$ {food.price}</p>
+          </div>
+          <div className="card-footer bg-white border-0">
+            <Link type="button" to={`/detailpage/${food._id}`} className="btn btn-danger btn-sm w-100">
+              Detail
+            </Link>
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
 
 
     );
@@ -152,20 +153,31 @@ const ButtonFunctionsPage = (props) => {
   return (
     <>
    
+
    <div className="row justify-content-center buttonsmenu">
+  <div className="lineunder">
+    Our Hot Dishes
+    <hr />
+  </div>
   {buttonData.map((button, index) => (
-    <div className="col-md-7 col-sm-8" key={button.id}>
+    <div className="col-md-1 col-sm-8 mt-5" key={button.id}>
       <button
-        className={`btn menubutton btn-block ${activeButton === index ? 'active' : ''}`}
+        className={`button ${activeButton === index ? 'active' : ''}`}
         onClick={() => handleButtonClick(index)}
       >
-        <img src={button.image} alt={button.label} className="button-image top-left" />
-        <img src={button.image} alt={button.label} className="button-image top-right" />
-        {button.label}
+        <div className={`icon-container ${activeButton === index ? 'active' : ''}`}>
+          <div className="icon">
+            <img src={button.image} alt={button.label} />
+          </div>
+        </div>
+        <div className="label">{button.label}</div>
       </button>
     </div>
   ))}
 </div>
+
+
+
 
     {card}
  </>
