@@ -59,11 +59,13 @@ const AdminPanel = () => {
       const response = await axios.get('http://localhost:3003/getrequest');
       const filteredRequests = response.data.requested;
       setRequests(filteredRequests);
+      console.log(requests.users.email)
     } catch (error) {
       console.error('Error fetching delivery boys requests:', error);
     }
   };
 console.log(requests)
+
   const fetchOrders = async () => {
     try {
       const response = await axios.get('http://localhost:3003/orders');
@@ -94,10 +96,8 @@ console.log(requests)
       // Handle the error or show an appropriate message to the user.
     }
   }
+ 
   const approve = (userId) => {
-    console.log('userId:', userId);
-  
-   console.log(role)
     if (!role) {
       notification.error({
         message: 'Error',
@@ -105,7 +105,7 @@ console.log(requests)
       });
       return;
     }
-  
+
     axios
       .put(`http://localhost:3003/users/${userId}/role`, {
         role: role,
@@ -117,6 +117,9 @@ console.log(requests)
             message: 'Approved',
             description: 'Request approved successfully.',
           });
+
+          // Update the user's status to "delivery" after approval
+          updateUserStatus(userId);
         } else {
           console.log(res.data.errors);
           notification.error({
@@ -131,6 +134,53 @@ console.log(requests)
           message: 'Error',
           description: 'Something went wrong. Please try again.',
         });
+      });
+  };
+
+  const updateUserStatus = (userId) => {
+    axios
+      .put(`http://localhost:3003/users/${userId}/status`, {
+        status: 'delivery',
+      })
+      .then((res) => {
+        if (res.data.status === true) {
+          console.log('User status updated successfully');
+          // Send the email notification to the user
+          sendEmailNotification(userId);
+        } else {
+          console.log(res.data.errors);
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating user status:', error);
+      });
+  };
+
+  const sendEmailNotification = (userId) => {
+    axios
+      .get(`http://localhost:3003/user/${userId}`)
+      .then((res) => {
+        if (res.data && res.data.user) {
+          const { email } = res.data.user;
+
+          // Call the API endpoint to send the email notification
+          axios
+            .post(`http://localhost:3003/send-notification`, {
+              email: email,
+              subject: 'Role Update Notification',
+              text: 'Your role has been updated to a delivery partner.',
+              html: '<p>Your role has been updated to a delivery partner.</p>',
+            })
+            .then((res) => {
+              console.log('Email sent successfully');
+            })
+            .catch((error) => {
+              console.error('Error sending email notification:', error);
+            });
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching user data:', error);
       });
   };
 
